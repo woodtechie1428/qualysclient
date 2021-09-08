@@ -8,7 +8,7 @@ exec(open('qualysclient/version.py').read())
 
 setup(
     name="qualysclient",
-    version=__version__,
+    version="__version__",
     author="Wood Techie",
     author_email="woodtechie1428@gmail.com",
     description="Python SDK for interacting with the Qualys API",
@@ -23,8 +23,8 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    package_dir={"": "src"},
-    packages=find_packages(where="src"),
+    package_dir={"": "qualysclient"},
+    packages=find_packages(where="qualysclient"),
     python_requires=">=3.6",
     py_modules=["qualysclient"],
     install_requires=['requests']
