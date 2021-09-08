@@ -8,7 +8,7 @@ exec(open('qualysclient/version.py').read())
 
 setup(
     name="qualysclient",
-    version="__version__",
+    version=__version__,
     author="Wood Techie",
     author_email="woodtechie1428@gmail.com",
     description="Python SDK for interacting with the Qualys API",
