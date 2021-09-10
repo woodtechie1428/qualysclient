@@ -1,5 +1,5 @@
 
-from aiohttp import payload
+
 from qualysclient.defaults import AUTH_URI
 import requests
 
