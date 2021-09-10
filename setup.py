@@ -24,7 +24,7 @@ setup(
         "Operating System :: OS Independent",
     ],
     package_dir={"": "qualysclient"},
-    packages=find_packages(where="qualysclient"),
+    packages=find_packages(),
     python_requires=">=3.6",
     py_modules=["qualysclient"],
     install_requires=['requests']
