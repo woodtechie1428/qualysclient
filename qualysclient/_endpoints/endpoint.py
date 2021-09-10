@@ -4,22 +4,28 @@ from typing import List
 
 class InputParameter:
 
-    def __init__(self, param_name:str, is_required:bool):
+    def __init__(self, param_name:str, is_required:bool = False, **kwargs):
         self.param_name = param_name
         self.is_required = is_required
+        self.description = kwargs.get('description')
 
     def __str__(self):
         _ = f'{self.param_name} :: {self.is_required}'
+        if (self.description):
+            _ = _ + ' :: ' + self.description
         return _
 
 InputParameters = List[InputParameter]
 
 class APIAction:
 
-    def __init__(self, action_name, api_endpoint:str, input_params:InputParameters):
+    def __init__(self, action_name, api_endpoint:str, input_params:InputParameters, http_method = 'POST'):
         self.action_name = action_name
         self.api_endpoint:str = api_endpoint
-        self.input_parameters = [InputParameter(param_name=pn, is_required=rb) for pn, rb in input_params]
+        self.input_parameters = [InputParameter(**ip) for ip in input_params]
+        self.http_method = http_method
+
+        
         
     def add_summary(self, summary:str):
         self.summary:str = summary
@@ -46,9 +52,18 @@ class APIAction:
     def __str__(self):
         _ = f'API Action Name: {self.action_name}\n'
         _ = _ + f'\tAPI Endpoint: {self.api_endpoint}\n'
+        _ = _ + f'\tHTTP Method: {self.http_method}\n'
         _ = _ + '\tInput Parameters: \n\t\t'+"\n\t\t".join([str(ip) for ip in self.input_parameters])
         return _
         
+    def get_valid_input_parameters(self):
+        return [input_param.param_name for input_param in self.input_parameters]
+
+    def get_required_input_parameters(self):
+        return [input_param.param_name for input_param in self.input_parameters if input_param.is_required == True]
+    
+    def get_optional_input_parameters(self):
+        return [input_param.param_name for input_param in self.input_parameters if input_param.is_required == False]
 
 
 
