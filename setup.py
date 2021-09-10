@@ -23,7 +23,7 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    package_dir={"": "qualysclient"},
+#     package_dir={"": "qualysclient"},
     packages=find_packages(),
     python_requires=">=3.6",
     py_modules=["qualysclient"],
