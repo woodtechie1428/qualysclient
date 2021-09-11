@@ -25,5 +25,5 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
-.. autoclass:: QualysClient
+.. autoclass:: qualysclient.QualysClient
    :members:
