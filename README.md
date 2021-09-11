@@ -1,5 +1,5 @@
 # qualysclient 
-[![qualysclient Actions Status](https://github.com/woodtechie1428/qualysclient/workflows/publish-to-pypi.yml/badge.svg)](https://github.com/woodtechie1428/qualysclient/actions)
+[![qualysclient Actions Status](https://img.shields.io/readthedocs/qualysclient?style=plastic)](https://github.com/woodtechie1428/qualysclient/actions)
 
 A python SDK for interacting with the Qualys API
 
