@@ -6,7 +6,9 @@ from qualysclient.defaults import AUTH_URI, BASE_URI
 from qualysclient._util import _api_request
 
 class QualysClient:
-    
+    """
+    a simple client for interacting with the Qualys API
+    """
     def __init__(self, username=None, password=None):
         # TODO throw exception for missing creds
         self.username = username
@@ -19,6 +21,14 @@ class QualysClient:
 
     
     def login(self, username, password):
+        """
+        Authenticate to Qualys API
+
+        :param username: Qualys Username
+        :type username: str
+        :param password: Qualys Password
+        :type password: str
+        """
         payload = {
             'action': 'login',
             'username': username,
@@ -34,6 +44,9 @@ class QualysClient:
 
 
     def logout(self):
+        """
+        Log out of authenticated sessionn
+        """
         payload = {
             'action': 'logout'
         }
@@ -43,6 +56,15 @@ class QualysClient:
 
     #REPORTS
     def list_reports(self, **kwargs):
+        """
+        View a list of reports in the user’s account when Report Share feature is enabled. The report list output includes all report types, including scorecard reports. 
+
+        :param id: Report ID
+        :type id: int
+        :return: (response.status_code, response.content)
+        :rtype: (int, Response)
+        """
+
         api_action = 'list_reports'
         return _api_request(self, api_action, **kwargs)
 
