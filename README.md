@@ -3,6 +3,7 @@
 [![qualysclient Actions Status](https://img.shields.io/github/license/woodtechie1428/qualysclient?style=plastic)](https://github.com/woodtechie1428/qualysclient/blob/main/LICENSE)
 [![qualysclient Actions Status](https://img.shields.io/readthedocs/qualysclient?style=plastic)](https://qualysclient.readthedocs.io/en/latest/)
 [![qualysclient Downlaods](https://img.shields.io/pypi/dm/qualysclient?style=plastic)](https://pypi.org/project/qualysclient/)
+[![qualysclient version](https://img.shields.io/github/v/release/woodtechie1428/qualysclient?sort=semver&style=plastic)](https://github.com/woodtechie1428/qualysclient/releases)
 
 
 A python SDK for interacting with the Qualys API
