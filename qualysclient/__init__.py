@@ -20,6 +20,26 @@ class QualysClient:
             self.login(username=username, password=password)
 
     
+    def __enter__(self, username=None, password=None):
+        self.username = username
+        self.password = password
+        self.s = requests.Session()
+        self.s.headers.update({'X-Requested-With':'Qualys Client - Python'})
+
+        if (username):
+            self.login(username=username, password=password)
+
+    def __exit__(self):
+        """
+        Log out of authenticated sessionn
+        """
+        payload = {
+            'action': 'logout'
+        }
+        r = self.s.post(AUTH_URI, payload)
+        if (r.status_code != 200):
+            print('Status:', r.status_code, 'Headers:', r.headers, 'Error Response:', r.content)
+
     def login(self, username, password):
         """
         Authenticate to Qualys API
