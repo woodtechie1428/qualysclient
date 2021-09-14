@@ -21,24 +21,14 @@ class QualysClient:
 
     
     def __enter__(self, username=None, password=None):
-        self.username = username
-        self.password = password
-        self.s = requests.Session()
-        self.s.headers.update({'X-Requested-With':'Qualys Client - Python'})
+        return self
 
-        if (username):
-            self.login(username=username, password=password)
-
-    def __exit__(self):
-        """
-        Log out of authenticated sessionn
-        """
-        payload = {
-            'action': 'logout'
-        }
-        r = self.s.post(AUTH_URI, payload)
-        if (r.status_code != 200):
-            print('Status:', r.status_code, 'Headers:', r.headers, 'Error Response:', r.content)
+    def __exit__(self, exc_type, exc_value, tb):
+        import traceback
+        if exc_type is not None:
+            traceback.print_exception(exc_type, exc_value, tb)
+        self.logout()
+        del self
 
     def login(self, username, password):
         """
@@ -58,9 +48,7 @@ class QualysClient:
         if (r.status_code != 200):
             print('Status:', r.status_code, 'Headers:', r.headers, 'Error Response:', r.content)
 
-    # def login(self, **kwargs):
-    #     api_action = 'login'
-    #     return _api_request(self, api_action, **kwargs)
+        return self
 
 
     def logout(self):
@@ -70,9 +58,9 @@ class QualysClient:
         payload = {
             'action': 'logout'
         }
-        r = self.s.post(AUTH_URI, payload)
+        r = self.s.post(AUTH_URI, data=payload)
         if (r.status_code != 200):
-            print('Status:', r.status_code, 'Headers:', r.headers, 'Error Response:', r.content)
+            print('\nStatus:', r.status_code, '\nHeaders:', r.headers, '\nError Response:', r.content)
 
     #REPORTS
     def list_reports(self, **kwargs):
