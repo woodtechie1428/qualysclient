@@ -197,6 +197,9 @@ _assets_endpoints = [
                 'param_name': 'echo_request'
             },
             {
+                'param_name': 'show_asset_id'
+            },
+            {
                 'param_name': 'show_results'
             },
             {
