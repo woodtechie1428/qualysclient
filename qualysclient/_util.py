@@ -44,4 +44,4 @@ def _perform_request(caller, api_url, input_params, http_method = 'GET'):
         params=input_params,
         headers=caller.s.headers,
         cookies=caller.s.cookies)
-    return api_response.status_code, api_response.content
+    return api_response
