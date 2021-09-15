@@ -37,11 +37,15 @@ def _api_request(caller, api_action, **kwargs):
         input_params = kwargs
         return _perform_request(caller, api_url, input_params, http_method)
 
-def _perform_request(caller, api_url, input_params, http_method = 'GET'):
-    api_response = requests.request(
-        method=http_method, 
-        url=api_url, 
-        params=input_params,
-        headers=caller.s.headers,
-        cookies=caller.s.cookies)
+def _perform_request(caller, api_url, input_params, http_method = 'POST'):
+    if (http_method == 'POST'):
+        api_response = caller.s.post(
+            url = api_url,
+            data = input_params
+        )
+    else:
+        api_response = caller.s.get(
+            url = api_url,
+            params = input_params
+        )
     return api_response
