@@ -38,14 +38,21 @@ def _api_request(caller, api_action, **kwargs):
         return _perform_request(caller, api_url, input_params, http_method)
 
 def _perform_request(caller, api_url, input_params, http_method = 'POST'):
-    if (http_method == 'POST'):
-        api_response = caller.s.post(
-            url = api_url,
-            data = input_params
-        )
-    else:
-        api_response = caller.s.get(
-            url = api_url,
-            params = input_params
-        )
+    try:
+        if (http_method == 'POST'):
+            api_response = caller.s.post(
+                url = api_url,
+                data = input_params,
+                timeout = 180
+            )
+        else:
+            api_response = caller.s.get(
+                url = api_url,
+                params = input_params,
+                timeout = 180
+            )
+    except requests.exceptions.ConnectTimeout as e:
+        print ("Request Timed out")
+        import sys
+        sys.exit(0)
     return api_response
