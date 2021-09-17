@@ -4,17 +4,21 @@ from qualysclient.defaults import AUTH_URI, BASE_URI
 import requests
 
 def _validate_parameters(api_action, **kwargs):
+        if api_action is None:
+            raise Exception("No api_action provided")
         validated = True
         print (f"Validating arguments submitted for {api_action}: \n")
 
         for k,v in kwargs.items():
             print (f"\t{k:15} \t.....\t", end="")
-            if k in API_ACTIONS.get(api_action).get_valid_input_parameters():
-                print ("VALID", flush=True)
-            else:
-                print ("INVALID", flush=True)
-                validated = False
-
+            try:
+                if k in API_ACTIONS.get(api_action).get_valid_input_parameters():
+                    print ("VALID", flush=True)
+                else:
+                    print ("INVALID", flush=True)
+                    validated = False
+            except AttributeError:
+                return False
 
         #validate all required params included
         print (f"Validating requirements parameters for {api_action} were included: \n")
