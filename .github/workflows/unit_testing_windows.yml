@@ -30,7 +30,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install pytest coverage
+        python -m pip install pytest coverage pytest-mock responses
         pip install -r requirements.txt
     - name: Test with pytest
 #       env:
