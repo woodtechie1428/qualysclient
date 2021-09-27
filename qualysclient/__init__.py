@@ -39,6 +39,9 @@ class QualysClient:
         :param password: Qualys Password
         :type password: str
         """
+        if (isinstance(username, str) == False or isinstance(password, str) == False):
+            raise Exception("username and password is required and must be of type str")
+            
         payload = {
             'action': 'login',
             'username': username,
