@@ -53,16 +53,29 @@ def _perform_request(caller, api_url, input_params, http_method = 'POST'):
                 data = input_params,
                 timeout = 180
             )
+            api_response.raise_for_status()
         else:
             api_response = caller.s.get(
                 url = api_url,
                 params = input_params,
                 timeout = 180
             )
+            api_response.raise_for_status()
+            return api_response
+    except requests.exceptions.HTTPError as http_error:
+        return api_response
+    except requests.ConnectionError as connection_error:
+        pass
+    except requests.URLRequired as url_required_error:
+        pass
+    except requests.TooManyRedirects as too_many_redirects_error:
+        pass
     except requests.exceptions.Timeout as e:
         print ("Request Timed out")
         raise requests.exceptions.Timeout
     except requests.exceptions.SSLError as e:
-        print ("Request Timed out")
+        print ("SSL Error")
         raise requests.exceptions.SSLError
-    return api_response
+    except requests.RequestException as request_exception_error:
+        pass
+    
