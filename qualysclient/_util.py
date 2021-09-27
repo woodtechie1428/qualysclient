@@ -6,6 +6,8 @@ import requests
 def _validate_parameters(api_action, **kwargs):
         if api_action is None:
             raise Exception("No api_action provided")
+        if API_ACTIONS.get(api_action, None) is None:
+            raise Exception("Invalid api_action specified")
         validated = True
         print (f"Validating arguments submitted for {api_action}: \n")
 
@@ -40,6 +42,8 @@ def _api_request(caller, api_action, **kwargs):
         api_url = BASE_URI+api_endpoint
         input_params = kwargs
         return _perform_request(caller, api_url, input_params, http_method)
+    else:
+        raise Exception("Parameter Validation failed")
 
 def _perform_request(caller, api_url, input_params, http_method = 'POST'):
     try:
@@ -55,8 +59,10 @@ def _perform_request(caller, api_url, input_params, http_method = 'POST'):
                 params = input_params,
                 timeout = 180
             )
-    except requests.exceptions.ConnectTimeout as e:
+    except requests.exceptions.Timeout as e:
         print ("Request Timed out")
-        import sys
-        sys.exit(0)
+        raise requests.exceptions.Timeout
+    except requests.exceptions.SSLError as e:
+        print ("Request Timed out")
+        raise requests.exceptions.SSLError
     return api_response
