@@ -34,9 +34,9 @@ jobs:
         python -m pip install pytest coverage pytest-mock response
         pip install -r requirements.txt
     - name: Test with pytest
-      env:
-        DEBUG_API_ID: ${{ secrets.DEBUG_API_ID }}
-        DEBUG_API_SECRET: ${{ secrets.DEBUG_API_SECRET }}
+#       env:
+#         DEBUG_API_ID: ${{ secrets.DEBUG_API_ID }}
+#         DEBUG_API_SECRET: ${{ secrets.DEBUG_API_SECRET }}
       run: |
         coverage run --source=qualysclient -m pytest -v
         coverage report -m
