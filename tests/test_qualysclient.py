@@ -7,10 +7,9 @@ import requests
 import responses
 from unittest.mock import Mock
 
+
 def test_login_non_str_inputs():
     with pytest.raises(Exception):
-        qc = QualysClient(username='abc', password = 5)
+        qc = QualysClient(username="abc", password=5)
     with pytest.raises(Exception):
-        qc = QualysClient(username=5, password = "def")
-
-
+        qc = QualysClient(username=5, password="def")
