@@ -71,6 +71,30 @@ def test_perform_request_SSLError(qc):
         )
 
 
+def test_perform_request_ConnectionError(qc):
+    qc.s.post.side_effect = requests.ConnectionError
+    with pytest.raises(requests.ConnectionError) as e_info:
+        tr = _util._perform_request(
+            qc, BASE_URI + "/api/2.0/fo/report/?action=list", None
+        )
+
+
+def test_perform_request_TooManyRedirects(qc):
+    qc.s.post.side_effect = requests.TooManyRedirects
+    with pytest.raises(requests.TooManyRedirects) as e_info:
+        tr = _util._perform_request(
+            qc, BASE_URI + "/api/2.0/fo/report/?action=list", None
+        )
+
+
+def test_perform_request_URLRequired(qc):
+    qc.s.post.side_effect = requests.URLRequired
+    with pytest.raises(requests.URLRequired) as e_info:
+        tr = _util._perform_request(
+            qc, BASE_URI + "/api/2.0/fo/report/?action=list", None
+        )
+
+
 def test_api_request_validation_fail(mocker):
     # mocker.patch('qualysclient._util._perform_request',
     #              return_value = True)
