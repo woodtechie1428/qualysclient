@@ -29,6 +29,8 @@ author = 'Wood Techie'
 # ones.
 extensions = ['sphinx.ext.napoleon','sphinx.ext.autodoc']
 
+napoleon_google_docstring = True
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
