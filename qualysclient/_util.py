@@ -3,7 +3,7 @@ import logging
 logger = logging.getLogger(__name__)
 from qualysclient._endpoints import api_actions as API_ACTIONS
 from qualysclient._endpoints.endpoint import APIAction
-from qualysclient.defaults import BASE_URI
+from qualysclient.defaults import BASE_URI, REQUEST_TIMEOUT, MAX_RETRIES
 import requests
 
 
@@ -51,31 +51,43 @@ def _api_request(caller, api_action, **kwargs):
 
 
 def _perform_request(caller, api_url, input_params, http_method="POST"):
-    try:
-        if http_method == "POST":
-            api_response = caller.s.post(url=api_url, data=input_params, timeout=180)
-            api_response.raise_for_status()
+    for i in range(MAX_RETRIES):
+        try:
+            if http_method == "POST":
+                api_response = caller.s.post(
+                    url=api_url, data=input_params, timeout=REQUEST_TIMEOUT
+                )
+                api_response.raise_for_status()
+                return api_response
+            else:
+                api_response = caller.s.get(
+                    url=api_url, params=input_params, timeout=REQUEST_TIMEOUT
+                )
+                api_response.raise_for_status()
+                return api_response
+        except requests.exceptions.HTTPError as http_error:
+            # handle non 200 status codes here
+            logger.error("HTTP Exception caught")
+            logger.error(http_error.response.status_code)
             return api_response
-        else:
-            api_response = caller.s.get(url=api_url, params=input_params, timeout=180)
-            api_response.raise_for_status()
-            return api_response
-    except requests.exceptions.HTTPError as http_error:
-        # handle non 200 status codes here
-        logger.error("HTTP Exception caught")
-        logger.error(http_error.response.status_code)
-        return api_response
-    except requests.URLRequired as url_required_error:
-        pass
-    except requests.TooManyRedirects as too_many_redirects_error:
-        pass
-    except requests.exceptions.Timeout as e:
-        logger.error("Request Timed out caught")
-        raise requests.exceptions.Timeout
-    except requests.exceptions.SSLError as e:
-        logger.error("SSL Error Exception caught")
-        raise requests.exceptions.SSLError
-    except requests.ConnectionError as connection_error:
-        pass
-    except requests.RequestException as request_exception_error:
-        pass
+        except requests.URLRequired as url_required_error:
+            logger.exception("caught URLRequired Exception")
+            raise
+        except requests.TooManyRedirects as too_many_redirects_error:
+            logger.exception("caught TooManyRedirects Exception")
+            raise
+        except requests.exceptions.Timeout as e:
+            logger.error(f"{i}: Request Timed out caught")
+            if i == MAX_RETRIES - 1:
+                raise
+            else:
+                continue
+        except requests.exceptions.SSLError as e:
+            logger.error("SSL Error Exception caught")
+            raise
+        except requests.ConnectionError as connection_error:
+            logger.exception("Caught Connection Error Exception")
+            raise
+        except requests.RequestException as request_exception_error:
+            logger.exception("Caught ambiguous RequestException")
+            raise
