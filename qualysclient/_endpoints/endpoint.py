@@ -1,3 +1,4 @@
+import qualysclient
 from typing import List
 
 
@@ -80,12 +81,27 @@ class APIAction:
             if input_param.is_required is False
         ]
 
+    def check_parameter(self, param_name):
+        if param_name in self.get_valid_input_parameters():
+            return True
+        else:
+            return False
 
-"""
-get_report_list()
-    uses APIAction get_report_list
-    find by lookup of term "api_action_list" in some list
-    /api/2.0/fo/report/
+    def validate_submitted_parameters(self, **input_params):
+        for input_param_name in input_params.keys():
+            if not self.check_parameter(input_param_name):
+                raise qualysclient.exceptions.InvalidParameterError(
+                    input_param_name, self.action_name
+                )
+                return False
+        return True
 
-
-"""
+    def validate_submitted_required_parameters(self, **input_params):
+        required_params = self.get_required_input_parameters()
+        for required_param in required_params:
+            if required_param not in input_params.keys():
+                raise qualysclient.exceptions.RequiredParameterMissingError(
+                    missing_required_param_name=required_param,
+                    api_action=self.action_name,
+                )
+        return True
