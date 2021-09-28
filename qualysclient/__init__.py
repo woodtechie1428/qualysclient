@@ -89,11 +89,32 @@ class QualysClient:
         api_action = "list_reports"
         return _api_request(self, api_action, **kwargs)
 
-    def launch_report(self, **kwargs):
+    def launch_report(self, **kwargs) -> requests.Response:
+        """
+        Launch a report in the user's account. The Report Share feature must be enabled in the
+        user's subscription. When a report is launched with Report Share, the report is run in the
+        background, and the report generation processing does not timeout until the report has
+        completed.
+
+        Keyword Args:
+            template_id (int):  (Required) The template ID of the report you want to launch.
+
+        Returns:
+            requests.Response: raw requests.Response object
+        """
         api_action = "launch_report"
         return _api_request(self, api_action, **kwargs)
 
-    def launch_scorecard(self, **kwargs):
+    def launch_scorecard(self, **kwargs) -> requests.Response:
+        """
+        Launch a vulnerability scorecard report in the user’s Report Share. It is not possible to
+        launch any compliance scorecard reports or WAS scorecard reports using this API at this time.
+        When a scorecard report is launched, the report is run in the background, and the report
+        generation processing does not timeout until the report has completed.
+
+        Returns:
+            requests.Response: raw requests.Response object
+        """
         api_action = "launch_scorecard"
         return _api_request(self, api_action, **kwargs)
 
