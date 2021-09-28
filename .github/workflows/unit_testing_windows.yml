@@ -3,12 +3,14 @@ on:
   push:
     paths:
       - '**.py'
+      - '!docs/**'
     branches: 
       - main
       - 'ver_*'
   pull_request:
     paths:
       - '**.py'
+      - '!docs/**'
     branches: 
       - main
       - 'ver_*'
