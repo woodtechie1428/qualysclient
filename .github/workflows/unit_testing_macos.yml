@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - '**.py'
+      - '!docs/**'
     branches: 
       - main
       - 'ver_*'
