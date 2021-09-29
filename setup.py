@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-exec(open('qualysclient/version.py').read())
+exec(open("qualysclient/version.py").read())
 
 setup(
     name="qualysclient",
@@ -23,10 +23,8 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-#     package_dir={"": "qualysclient"},
     packages=find_packages(),
     python_requires=">=3.6",
     py_modules=["qualysclient"],
-    install_requires=['requests']
-
+    install_requires=["requests", "lxml"],
 )
