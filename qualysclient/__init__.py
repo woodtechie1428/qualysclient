@@ -123,7 +123,7 @@ class QualysClient:
                 - Most Vulnerable Hosts Report
                 - Patch Report
         Returns:
-            `Response`: raw requests.Response object
+            Response: Qualys API response contained within request.Response object
         """
         api_action = "launch_scorecard"
         return _api_request(self, api_action, **kwargs)
@@ -138,27 +138,63 @@ class QualysClient:
             `ParameterValidationError`: When Parameter Validation fails
 
         Returns:
-            `Response`: Response object containing data returned from API
+            `Response`: Qualys API response contained within request.Response object
         """
         api_action = "cancel_running_report"
         return _api_request(self, api_action, **kwargs)
 
-    def download_saved_report(self, **kwargs):
+    def download_saved_report(self, id: int, **kwargs) -> Response:
+        """Download a saved report in the user’s account
+
+        You can download all report types (map, scan, patch, authentication, scorecard, remediation, compliance). This option is available when the Report Share feature is enabled in the user’s subscription.
+
+        Args:
+            id (int):  (Required) Specifies the report ID of a saved report that you want to download. The status of the report must be “finished”
+
+        Returns:
+            Response: Qualys API response contained within request.Response object
+        """
         api_action = "download_saved_report"
+        kwargs["id"] = id
         return _api_request(self, api_action, **kwargs)
 
     # ASSET
 
-    def list_ip(self, **kwargs):
+    def list_ip(self, **kwargs) -> Response:
+        """List IP addresses in the user account. By default, all hosts in the user account are included.
+
+        Optional input parameters support filtering the list by IP addresses and host tracking method.
+
+        Returns:
+            Response: Qualys API response contained within request.Response object
+        """
         api_action = "list_ip"
         return _api_request(self, api_action, **kwargs)
 
-    def add_ips(self, **kwargs):
+    def add_ips(self, **kwargs) -> Response:
+        """Add IP addresses to the user's subscription.
+
+        Once added they are available for scanning and reporting.
+
+        Returns:
+            Response: Qualys API response contained within request.Response object
+        """
         api_action = "add_ips"
         return _api_request(self, api_action, **kwargs)
 
-    def update_ips(self, **kwargs):
+    def update_ips(self, ips: str, **kwargs) -> Response:
+        """Update IP addresses in the user's subscription.
+
+        Args:
+            ips (str): (Required) The hosts within the subscription you want to update. IPs must be specified by using the “ips” parameter (using the POST method)
+
+        Example:
+            ips=10.10.10.200,10.10.23.40
+        Returns:
+            Response: Qualys API response contained within request.Response object
+        """
         api_action = "update_ips"
+        kwargs["ips"] = ips
         return _api_request(self, api_action, **kwargs)
 
     def host_list(self, truncation_limit=10, **kwargs):
