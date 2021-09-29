@@ -25,24 +25,12 @@ _assets_endpoints = [
         "/api/2.0/fo/asset/ip/?action=update",
         [
             {"param_name": "echo_request"},
-            {
-                "param_name": "show_asset_id",
-            },
-            {
-                "param_name": "details",
-            },
-            {
-                "param_name": "os_pattern",
-            },
-            {
-                "param_name": "truncation_limit",
-            },
-            {
-                "param_name": "ips",
-            },
-            {
-                "param_name": "show_asset_id",
-            },
+            {"param_name": "show_asset_id"},
+            {"param_name": "details"},
+            {"param_name": "os_pattern"},
+            {"param_name": "truncation_limit"},
+            {"param_name": "ips"},
+            {"param_name": "show_asset_id"},
             {"param_name": "no_vm_scan_since"},
         ],
     ],
