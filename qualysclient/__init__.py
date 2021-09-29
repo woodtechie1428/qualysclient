@@ -81,7 +81,7 @@ class QualysClient:
         The report list output includes all report types, including scorecard reports.
 
         Args:
-            **kwargs: supported keywords documented within the [Qualys VM/PC API user guide](https://www.qualys.com/docs/qualys-api-vmpc-user-guide.pdf)
+            **kwargs: supported keywords documented within the `Qualys VM/PC API user guide <https://www.qualys.com/docs/qualys-api-vmpc-user-guide.pdf>`
 
         Returns:
             Response: Qualys API response contained within request.Response object
@@ -101,7 +101,7 @@ class QualysClient:
             template_id (int):  (Required) The template ID of the report you want to launch.
 
         Returns:
-            Response: Qualys API response contained within request.Response object
+            :py:class:`Response`: Qualys API response contained within request.Response object
         """
         api_action = "launch_report"
         kwargs["template_id"] = template_id
