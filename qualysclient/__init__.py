@@ -115,7 +115,7 @@ class QualysClient:
         generation processing does not timeout until the report has completed.
 
         Args:
-            - name (str):  (Required) Specifies the scorecard name for the vulnerability scorecard report that you want to launch. This name corresponds to a service-provided scorecard or a user-created scorecard. For a service-provided scorecard, specify one of these names:
+            name (str):  (Required) Specifies the scorecard name for the vulnerability scorecard report that you want to launch. This name corresponds to a service-provided scorecard or a user-created scorecard. For a service-provided scorecard, specify one of these names:
 
                 - Asset Group Vulnerability Report
                 - Ignored Vulnerabilities Report
@@ -130,6 +130,7 @@ class QualysClient:
 
     def cancel_running_report(self, id: int, **kwargs) -> Response:
         """Cancel a running report in the user’s account.
+
         Args:
             id (int): Specifies the report ID of a running report that you want to cancel. The status of the report must be “running”.
 
