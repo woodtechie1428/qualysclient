@@ -1,4 +1,4 @@
-import requests
+from requests import Response
 
 from qualysclient.defaults import AUTH_URI
 
@@ -89,36 +89,56 @@ class QualysClient:
         api_action = "list_reports"
         return _api_request(self, api_action, **kwargs)
 
-    def launch_report(self, **kwargs) -> requests.Response:
-        """
+    def launch_report(self, template_id: int, **kwargs) -> Response:
+        """Launch a report in the user's account.
         Launch a report in the user's account. The Report Share feature must be enabled in the
         user's subscription. When a report is launched with Report Share, the report is run in the
         background, and the report generation processing does not timeout until the report has
         completed.
 
-        Keyword Args:
+        Args:
             template_id (int):  (Required) The template ID of the report you want to launch.
 
         Returns:
-            requests.Response: raw requests.Response object
+            Response: raw requests.Response object
         """
         api_action = "launch_report"
+        kwargs["template_id"] = template_id
         return _api_request(self, api_action, **kwargs)
 
-    def launch_scorecard(self, **kwargs) -> requests.Response:
-        """
+    def launch_scorecard(self, name: str, **kwargs) -> Response:
+        """Launch a vulnerability scorecard report in the user’s Report Share.
+
         Launch a vulnerability scorecard report in the user’s Report Share. It is not possible to
         launch any compliance scorecard reports or WAS scorecard reports using this API at this time.
         When a scorecard report is launched, the report is run in the background, and the report
         generation processing does not timeout until the report has completed.
 
+        Args:
+            - name (str):  (Required) Specifies the scorecard name for the vulnerability scorecard report that you want to launch. This name corresponds to a service-provided scorecard or a user-created scorecard. For a service-provided scorecard, specify one of these names:
+
+                - Asset Group Vulnerability Report
+                - Ignored Vulnerabilities Report
+                - Most Prevalent Vulnerabilities Report
+                - Most Vulnerable Hosts Report
+                - Patch Report
         Returns:
-            requests.Response: raw requests.Response object
+            `Response`: raw requests.Response object
         """
         api_action = "launch_scorecard"
         return _api_request(self, api_action, **kwargs)
 
-    def cancel_running_report(self, **kwargs):
+    def cancel_running_report(self, id: int, **kwargs) -> Response:
+        """Cancel a running report in the user’s account.
+        Args:
+            id (int): Specifies the report ID of a running report that you want to cancel. The status of the report must be “running”.
+
+        Raises:
+            `ParameterValidationError`: When Parameter Validation fails
+
+        Returns:
+            `Response`: Response object containing data returned from API
+        """
         api_action = "cancel_running_report"
         return _api_request(self, api_action, **kwargs)
 
@@ -170,8 +190,21 @@ class QualysClient:
         api_action = "compliance_policy_list"
         return _api_request(self, api_action, **kwargs)
 
-    def compliance_policy_export(self, **kwargs):
+    def compliance_policy_export(self, id: int, **kwargs) -> Response:
+        """Export compliance policies from your account to an XML file.
+
+        Service provided controls are exported and you can choose to also export user defined controls. The output also
+        includes an appendix with human readable look-ups for control descriptions, giving you
+        explanation on the various aspects of control description and evaluation.
+
+        Args:
+            id (int): The ID of the policy you want to export
+
+        Returns:
+            Response:
+        """
         api_action = "compliance_policy_export"
+        kwargs["id"] = id
         return _api_request(self, api_action, **kwargs)
 
     def compliance_policy_import(self, **kwargs):

@@ -32,7 +32,7 @@ _compliance_endpoints = [
         "/api/2.0/fo/compliance/policy/?action=export",
         [
             {"param_name": "echo_request"},
-            {"param_name": "id"},
+            {"param_name": "id", "is_required": True},
             {"param_name": "title"},
             {"param_name": "show_user_controls"},
             {"param_name": "show_appendix"},
