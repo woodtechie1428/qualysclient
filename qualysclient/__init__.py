@@ -75,15 +75,16 @@ class QualysClient:
             )
 
     # REPORTS
-    def list_reports(self, **kwargs):
-        """
-        View a list of reports in the user’s account when Report Share feature is enabled.
+    def list_reports(self, **kwargs) -> Response:
+        """View a list of reports in the user’s account when Report Share feature is enabled.
+
         The report list output includes all report types, including scorecard reports.
 
-        :param id: Report ID
-        :type id: int
-        :return: (response.status_code, response.content)
-        :rtype: (int, Response)
+        Args:
+            **kwargs: supported keywords documented within the [Qualys VM/PC API user guide](https://www.qualys.com/docs/qualys-api-vmpc-user-guide.pdf)
+
+        Returns:
+            Response: Qualys API response contained within request.Response object
         """
 
         api_action = "list_reports"
@@ -100,7 +101,7 @@ class QualysClient:
             template_id (int):  (Required) The template ID of the report you want to launch.
 
         Returns:
-            Response: raw requests.Response object
+            Response: Qualys API response contained within request.Response object
         """
         api_action = "launch_report"
         kwargs["template_id"] = template_id
@@ -188,10 +189,11 @@ class QualysClient:
         Args:
             ips (str): (Required) The hosts within the subscription you want to update. IPs must be specified by using the “ips” parameter (using the POST method)
 
-        Example:
-            ips=10.10.10.200,10.10.23.40
         Returns:
             Response: Qualys API response contained within request.Response object
+
+        Example:
+            ips=10.10.10.200,10.10.23.40
         """
         api_action = "update_ips"
         kwargs["ips"] = ips
