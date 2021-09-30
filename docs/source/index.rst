@@ -26,6 +26,17 @@ To use qualysclient, first install it using pip:
 
    (.venv) $ pip install qualysclient
 
+Usage Examples
+--------------
+
+.. code-block:: python
+
+   from qualysclient import QualysClient
+
+   qc = QualysClient(username = "your_username", password = "your_password")
+   api_resp = qc.list_reports()
+   qc.logout()
+
 API Reference
 ---------------
 .. toctree::
