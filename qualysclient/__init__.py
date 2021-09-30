@@ -1,3 +1,4 @@
+from io import FileIO
 from requests import Response, Session
 
 from qualysclient._defaults import AUTH_URI
@@ -98,6 +99,7 @@ class QualysClient:
 
         Args:
             template_id (int):  (Required) The template ID of the report you want to launch.
+            **kwargs: supported keywords documented within the `Qualys VM/PC API user guide <https://www.qualys.com/docs/qualys-api-vmpc-user-guide.pdf>`_
 
         Returns:
             :class:`~requests.Response`: Qualys API response contained within request.Response object
@@ -122,6 +124,8 @@ class QualysClient:
                 - Most Prevalent Vulnerabilities Report
                 - Most Vulnerable Hosts Report
                 - Patch Report
+
+            **kwargs: supported keywords documented within the `Qualys VM/PC API user guide <https://www.qualys.com/docs/qualys-api-vmpc-user-guide.pdf>`_
         Returns:
             :class:`~requests.Response`: Qualys API response contained within request.Response object
         """
@@ -133,6 +137,7 @@ class QualysClient:
 
         Args:
             id (int): Specifies the report ID of a running report that you want to cancel. The status of the report must be “running”.
+            **kwargs: supported keywords documented within the `Qualys VM/PC API user guide <https://www.qualys.com/docs/qualys-api-vmpc-user-guide.pdf>`_
 
         Raises:
             `ParameterValidationError`: When Parameter Validation fails
@@ -150,6 +155,7 @@ class QualysClient:
 
         Args:
             id (int):  (Required) Specifies the report ID of a saved report that you want to download. The status of the report must be “finished”
+            **kwargs: supported keywords documented within the `Qualys VM/PC API user guide <https://www.qualys.com/docs/qualys-api-vmpc-user-guide.pdf>`_
 
         Returns:
             :class:`~requests.Response`: Qualys API response contained within request.Response object
@@ -176,6 +182,9 @@ class QualysClient:
 
         Once added they are available for scanning and reporting.
 
+        Args:
+            **kwargs: supported keywords documented within the `Qualys VM/PC API user guide <https://www.qualys.com/docs/qualys-api-vmpc-user-guide.pdf>`_
+
         Returns:
             :class:`~requests.Response`: Qualys API response contained within request.Response object
         """
@@ -187,6 +196,7 @@ class QualysClient:
 
         Args:
             ips (str): (Required) The hosts within the subscription you want to update. IPs must be specified by using the “ips” parameter (using the POST method)
+            **kwargs: supported keywords documented within the `Qualys VM/PC API user guide <https://www.qualys.com/docs/qualys-api-vmpc-user-guide.pdf>`_
 
         Returns:
             :class:`~requests.Response`: Qualys API response contained within request.Response object
@@ -205,9 +215,23 @@ class QualysClient:
         return _api_request(self, api_action, **kwargs)
 
     def host_list_detection(self, truncation_limit=10, **kwargs):
+        """
+        Download a list of hosts with the hosts latest vulnerability data, based on the host based scan data available in the user’s account.
+
+        This data brings a lot of value to customers because they provide the latest complete vulnerability status for the hosts (NEW, ACTIVE, FIXED, REOPENED) and history information.
+
+        Args:
+            truncation_limit (int, optional): Specifies the maximum number of host records processed per request. Defaults to 10.
+            **kwargs: supported keywords documented within the `Qualys VM/PC API user guide <https://www.qualys.com/docs/qualys-api-vmpc-user-guide.pdf>`_
+
+        Returns:
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
+        """
         api_action = "host_list_detection"
         if kwargs.get("truncation_limit") is None:
-            kwargs["truncation_limit"] = truncation_limit
+            kwargs[
+                "truncation_limit"
+            ] = truncation_limit  # TODO #11 needs pagination support
         return _api_request(self, api_action, **kwargs)
 
     def excluded_host_list(self, **kwargs):
@@ -220,11 +244,31 @@ class QualysClient:
 
     # COMPLIANCE
 
-    def compliance_control_list(self, **kwargs):
+    def compliance_control_list(self, **kwargs) -> Response:
+        """
+        View a list of compliance controls which are visible to the user.
+
+        Controls in the XML output are sorted by control ID in ascending order. Optional input parameters support filtering the list.
+
+        Args:
+            **kwargs: supported keywords documented within the `Qualys VM/PC API user guide <https://www.qualys.com/docs/qualys-api-vmpc-user-guide.pdf>`_
+        Returns:
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
+        """
         api_action = "compliance_control_list"
         return _api_request(self, api_action, **kwargs)
 
     def compliance_policy_list(self, **kwargs):
+        """
+        View a list of compliance policies visible to the user.
+
+        Policies in the XML output are sorted by compliance policy ID in ascending order. Optional input parameters support filtering the policy list output.
+
+        Args:
+            **kwargs: supported keywords documented within the `Qualys VM/PC API user guide <https://www.qualys.com/docs/qualys-api-vmpc-user-guide.pdf>`_
+        Returns:
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
+        """
         api_action = "compliance_policy_list"
         return _api_request(self, api_action, **kwargs)
 
@@ -237,6 +281,7 @@ class QualysClient:
 
         Args:
             id (int): The ID of the policy you want to export
+            **kwargs: supported keywords documented within the `Qualys VM/PC API user guide <https://www.qualys.com/docs/qualys-api-vmpc-user-guide.pdf>`_
 
         Returns:
             :class:`~requests.Response`:
@@ -245,19 +290,76 @@ class QualysClient:
         kwargs["id"] = id
         return _api_request(self, api_action, **kwargs)
 
-    def compliance_policy_import(self, **kwargs):
+    def compliance_policy_import(
+        self, xml_file: FileIO, title: str, **kwargs
+    ) -> Response:
+        """Import a compliance policy, defined in an XML file, into your account.
+
+        We’ll include all the service-provided controls from your XML file. You have the option to also include userdefined controls.
+
+        Args:
+            xml_file (FileIO): The file containing the policy details.
+            title (str): The title of the new policy.
+            **kwargs: supported keywords documented within the `Qualys VM/PC API user guide <https://www.qualys.com/docs/qualys-api-vmpc-user-guide.pdf>`_
+
+        Returns:
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
+        """
         api_action = "compliance_policy_import"
+        kwargs["title"] = title
+        kwargs["xml_file"] = xml_file
+        # TODO _api_request doesnt handle uploading files yet
         return _api_request(self, api_action, **kwargs)
 
-    def compliance_policy_merge(self, **kwargs):
+    def compliance_policy_merge(
+        self, id: int, merge_policy_id: int, **kwargs
+    ) -> Response:
+        """Merge (combine) 2 or more compliance policies using Qualys Policy Compliance (PC).
+
+        Args:
+            id (int): The ID of the policy that will be updated with merged content (let’s call this Policy A).
+            merge_policy_id (int): Tell us the policy with the content that will be merged into Policy A (let’s call this Policy B).
+            **kwargs : supported keywords documented within the `Qualys VM/PC API user guide <https://www.qualys.com/docs/qualys-api-vmpc-user-guide.pdf>`_
+
+        Returns:
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
+        """
         api_action = "compliance_policy_merge"
+        kwargs["id"] = id
+        kwargs["merge_policy_id"] = merge_policy_id
         return _api_request(self, api_action, **kwargs)
 
-    def compliance_policy_add_asset_group_ids(self, **kwargs):
+    def compliance_policy_add_asset_group_ids(
+        self, id: int, asset_group_ids: str, **kwargs
+    ):
+        """
+        Add asset group IDs to policy
+
+        Args:
+            id (int): Policy ID for the policy you want to update
+            asset_group_ids (str): Asset groups IDs for the asset groups you want to add to the policy specified in “id”. Multiple IDs are comma separated. Each asset group must have at least 1 assigned IP address.
+
+        Returns:
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
+        """
         api_action = "compliance_policy_add_asset_group_ids"
+        kwargs["id"] = id
+        kwargs["asset_group_ids"] = asset_group_ids
         return _api_request(self, api_action, **kwargs)
 
     def compliance_policy_set_asset_group_ids(self, **kwargs):
+        """
+        Set asset group IDs for policy
+
+        Use this action to reset the asset groups for a specified policy. Any assigned asset groups not specified in this request will be removed.
+
+        Args:
+            id (int): Policy ID for the policy you want to update
+            asset_group_ids (str): Asset groups IDs for the asset groups you want to assign to the policy specified in “id”. Multiple IDs are comma separated. Each asset group must have at least 1 assigned IP address.
+
+        Returns:
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
+        """
         api_action = "compliance_policy_set_asset_group_ids"
         return _api_request(self, api_action, **kwargs)
 
