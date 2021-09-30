@@ -354,3 +354,5 @@ build/
 *egg-info/
 
 localtest.py
+
+docs/source/_autosummary/
