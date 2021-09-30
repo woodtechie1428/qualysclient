@@ -17,6 +17,7 @@ setup(
     url="https://github.com/woodtechie1428/qualysclient",
     project_urls={
         "Bug Tracker": "https://github.com/woodtechie1428/qualysclient/issues",
+        "Documentation": "https://qualysclient.readthedocs.io/en/latest/",
     },
     classifiers=[
         "Programming Language :: Python :: 3",
