@@ -74,8 +74,8 @@ _compliance_endpoints = [
         ],
     ],
     [
-        "compliance_policy_set_asset_group_ids",
-        "/api/2.0/fo/compliance/policy/?action=set_asset_group_ids",
+        "compliance_policy_remove_asset_group_ids",
+        "/api/2.0/fo/compliance/policy/?action=remove_asset_group_ids",
         [
             {"param_name": "id", "is_required": True},
             {"param_name": "asset_group_ids", "is_required": True},
@@ -83,8 +83,8 @@ _compliance_endpoints = [
         ],
     ],
     [
-        "compliance_policy_add_asset_groups",
-        "/api/2.0/fo/compliance/policy/?action=add_asset_group_ids",
+        "compliance_policy_set_asset_group_ids",
+        "/api/2.0/fo/compliance/policy/?action=set_asset_group_ids",
         [
             {"param_name": "id", "is_required": True},
             {"param_name": "asset_group_ids", "is_required": True},
