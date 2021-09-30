@@ -2,7 +2,7 @@ from ._ep_reports import _reports_endpoints
 from ._ep_assets import _assets_endpoints
 from ._ep_compliance import _compliance_endpoints
 from ._ep_session import _session_endpoints
-from .endpoint import APIAction
+from ..models import APIAction
 
 api_actions = {}
 

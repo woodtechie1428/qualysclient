@@ -1,6 +1,6 @@
-import requests
+from requests import Response, Session
 
-from qualysclient.defaults import AUTH_URI
+from qualysclient._defaults import AUTH_URI
 
 
 from qualysclient._util import _api_request
@@ -12,10 +12,9 @@ class QualysClient:
     """
 
     def __init__(self, username=None, password=None):
-        # TODO throw exception for missing creds
         self.username = username
         self.password = password
-        self.s = requests.Session()
+        self.s = Session()
         self.s.headers.update({"X-Requested-With": "Qualys Client - Python"})
 
         if username:
@@ -75,69 +74,128 @@ class QualysClient:
             )
 
     # REPORTS
-    def list_reports(self, **kwargs):
-        """
-        View a list of reports in the user’s account when Report Share feature is enabled.
+    def list_reports(self, **kwargs) -> Response:
+        """View a list of reports in the user’s account when Report Share feature is enabled.
+
         The report list output includes all report types, including scorecard reports.
 
-        :param id: Report ID
-        :type id: int
-        :return: (response.status_code, response.content)
-        :rtype: (int, Response)
+        Args:
+            **kwargs: supported keywords documented within the `Qualys VM/PC API user guide <https://www.qualys.com/docs/qualys-api-vmpc-user-guide.pdf>`_
+
+        Returns:
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
         """
 
         api_action = "list_reports"
         return _api_request(self, api_action, **kwargs)
 
-    def launch_report(self, **kwargs) -> requests.Response:
-        """
+    def launch_report(self, template_id: int, **kwargs) -> Response:
+        """Launch a report in the user's account.
         Launch a report in the user's account. The Report Share feature must be enabled in the
         user's subscription. When a report is launched with Report Share, the report is run in the
         background, and the report generation processing does not timeout until the report has
         completed.
 
-        Keyword Args:
+        Args:
             template_id (int):  (Required) The template ID of the report you want to launch.
 
         Returns:
-            requests.Response: raw requests.Response object
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
         """
         api_action = "launch_report"
+        kwargs["template_id"] = template_id
         return _api_request(self, api_action, **kwargs)
 
-    def launch_scorecard(self, **kwargs) -> requests.Response:
-        """
+    def launch_scorecard(self, name: str, **kwargs) -> Response:
+        """Launch a vulnerability scorecard report in the user’s Report Share.
+
         Launch a vulnerability scorecard report in the user’s Report Share. It is not possible to
         launch any compliance scorecard reports or WAS scorecard reports using this API at this time.
         When a scorecard report is launched, the report is run in the background, and the report
         generation processing does not timeout until the report has completed.
 
+        Args:
+            name (str):  (Required) Specifies the scorecard name for the vulnerability scorecard report that you want to launch. This name corresponds to a service-provided scorecard or a user-created scorecard. For a service-provided scorecard, specify one of these names:
+
+                - Asset Group Vulnerability Report
+                - Ignored Vulnerabilities Report
+                - Most Prevalent Vulnerabilities Report
+                - Most Vulnerable Hosts Report
+                - Patch Report
         Returns:
-            requests.Response: raw requests.Response object
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
         """
         api_action = "launch_scorecard"
         return _api_request(self, api_action, **kwargs)
 
-    def cancel_running_report(self, **kwargs):
+    def cancel_running_report(self, id: int, **kwargs) -> Response:
+        """Cancel a running report in the user’s account.
+
+        Args:
+            id (int): Specifies the report ID of a running report that you want to cancel. The status of the report must be “running”.
+
+        Raises:
+            `ParameterValidationError`: When Parameter Validation fails
+
+        Returns:
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
+        """
         api_action = "cancel_running_report"
         return _api_request(self, api_action, **kwargs)
 
-    def download_saved_report(self, **kwargs):
+    def download_saved_report(self, id: int, **kwargs) -> Response:
+        """Download a saved report in the user’s account
+
+        You can download all report types (map, scan, patch, authentication, scorecard, remediation, compliance). This option is available when the Report Share feature is enabled in the user’s subscription.
+
+        Args:
+            id (int):  (Required) Specifies the report ID of a saved report that you want to download. The status of the report must be “finished”
+
+        Returns:
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
+        """
         api_action = "download_saved_report"
+        kwargs["id"] = id
         return _api_request(self, api_action, **kwargs)
 
     # ASSET
 
-    def list_ip(self, **kwargs):
+    def list_ip(self, **kwargs) -> Response:
+        """List IP addresses in the user account. By default, all hosts in the user account are included.
+
+        Optional input parameters support filtering the list by IP addresses and host tracking method.
+
+        Returns:
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
+        """
         api_action = "list_ip"
         return _api_request(self, api_action, **kwargs)
 
-    def add_ips(self, **kwargs):
+    def add_ips(self, **kwargs) -> Response:
+        """Add IP addresses to the user's subscription.
+
+        Once added they are available for scanning and reporting.
+
+        Returns:
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
+        """
         api_action = "add_ips"
         return _api_request(self, api_action, **kwargs)
 
-    def update_ips(self, **kwargs):
+    def update_ips(self, ips: str, **kwargs) -> Response:
+        """Update IP addresses in the user's subscription.
+
+        Args:
+            ips (str): (Required) The hosts within the subscription you want to update. IPs must be specified by using the “ips” parameter (using the POST method)
+
+        Returns:
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
+
+        Example:
+            ips=10.10.10.200,10.10.23.40
+        """
         api_action = "update_ips"
+        kwargs["ips"] = ips
         return _api_request(self, api_action, **kwargs)
 
     def host_list(self, truncation_limit=10, **kwargs):
@@ -170,8 +228,21 @@ class QualysClient:
         api_action = "compliance_policy_list"
         return _api_request(self, api_action, **kwargs)
 
-    def compliance_policy_export(self, **kwargs):
+    def compliance_policy_export(self, id: int, **kwargs) -> Response:
+        """Export compliance policies from your account to an XML file.
+
+        Service provided controls are exported and you can choose to also export user defined controls. The output also
+        includes an appendix with human readable look-ups for control descriptions, giving you
+        explanation on the various aspects of control description and evaluation.
+
+        Args:
+            id (int): The ID of the policy you want to export
+
+        Returns:
+            :class:`~requests.Response`:
+        """
         api_action = "compliance_policy_export"
+        kwargs["id"] = id
         return _api_request(self, api_action, **kwargs)
 
     def compliance_policy_import(self, **kwargs):

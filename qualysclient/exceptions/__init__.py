@@ -1,4 +1,8 @@
-class ParameterValidationError(Exception):
+class QualysClientError(Exception):
+    """Base Exception class for Qualys Client"""
+
+
+class ParameterValidationError(QualysClientError):
     """When Parameter validation fails"""
 
 
@@ -24,3 +28,7 @@ class InvalidParameterError(ParameterValidationError):
             f"'{invalid_param_name}' is not a valid parameter for {api_action}"
         )
         super().__init__(self.message)
+
+
+class LoginError(QualysClientError):
+    """When login failures occur"""
