@@ -1,4 +1,4 @@
-from requests import Response
+from requests import Response, Session
 
 from qualysclient.defaults import AUTH_URI
 
@@ -12,10 +12,9 @@ class QualysClient:
     """
 
     def __init__(self, username=None, password=None):
-        # TODO throw exception for missing creds
         self.username = username
         self.password = password
-        self.s = requests.Session()
+        self.s = Session()
         self.s.headers.update({"X-Requested-With": "Qualys Client - Python"})
 
         if username:
@@ -81,10 +80,10 @@ class QualysClient:
         The report list output includes all report types, including scorecard reports.
 
         Args:
-            **kwargs: supported keywords documented within the `Qualys VM/PC API user guide <https://www.qualys.com/docs/qualys-api-vmpc-user-guide.pdf>`
+            **kwargs: supported keywords documented within the `Qualys VM/PC API user guide <https://www.qualys.com/docs/qualys-api-vmpc-user-guide.pdf>`_
 
         Returns:
-            Response: Qualys API response contained within request.Response object
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
         """
 
         api_action = "list_reports"
@@ -101,7 +100,7 @@ class QualysClient:
             template_id (int):  (Required) The template ID of the report you want to launch.
 
         Returns:
-            :py:class:`Response`: Qualys API response contained within request.Response object
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
         """
         api_action = "launch_report"
         kwargs["template_id"] = template_id
@@ -124,7 +123,7 @@ class QualysClient:
                 - Most Vulnerable Hosts Report
                 - Patch Report
         Returns:
-            Response: Qualys API response contained within request.Response object
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
         """
         api_action = "launch_scorecard"
         return _api_request(self, api_action, **kwargs)
@@ -139,7 +138,7 @@ class QualysClient:
             `ParameterValidationError`: When Parameter Validation fails
 
         Returns:
-            `Response`: Qualys API response contained within request.Response object
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
         """
         api_action = "cancel_running_report"
         return _api_request(self, api_action, **kwargs)
@@ -153,7 +152,7 @@ class QualysClient:
             id (int):  (Required) Specifies the report ID of a saved report that you want to download. The status of the report must be “finished”
 
         Returns:
-            Response: Qualys API response contained within request.Response object
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
         """
         api_action = "download_saved_report"
         kwargs["id"] = id
@@ -167,7 +166,7 @@ class QualysClient:
         Optional input parameters support filtering the list by IP addresses and host tracking method.
 
         Returns:
-            Response: Qualys API response contained within request.Response object
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
         """
         api_action = "list_ip"
         return _api_request(self, api_action, **kwargs)
@@ -178,7 +177,7 @@ class QualysClient:
         Once added they are available for scanning and reporting.
 
         Returns:
-            Response: Qualys API response contained within request.Response object
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
         """
         api_action = "add_ips"
         return _api_request(self, api_action, **kwargs)
@@ -190,7 +189,7 @@ class QualysClient:
             ips (str): (Required) The hosts within the subscription you want to update. IPs must be specified by using the “ips” parameter (using the POST method)
 
         Returns:
-            Response: Qualys API response contained within request.Response object
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
 
         Example:
             ips=10.10.10.200,10.10.23.40
@@ -240,7 +239,7 @@ class QualysClient:
             id (int): The ID of the policy you want to export
 
         Returns:
-            Response:
+            :class:`~requests.Response`:
         """
         api_action = "compliance_policy_export"
         kwargs["id"] = id
