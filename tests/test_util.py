@@ -7,7 +7,7 @@ from qualysclient.exceptions import (
     RequiredParameterMissingError,
 )
 import qualysclient
-from qualysclient.defaults import BASE_URI
+from qualysclient._defaults import BASE_URI
 import pytest
 import requests
 import responses

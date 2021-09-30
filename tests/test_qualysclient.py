@@ -1,7 +1,6 @@
 from requests.sessions import session
 from requests.exceptions import SSLError, Timeout
 from qualysclient import QualysClient
-from qualysclient.defaults import BASE_URI
 import pytest
 import requests
 import responses

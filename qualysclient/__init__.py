@@ -1,6 +1,6 @@
 from requests import Response, Session
 
-from qualysclient.defaults import AUTH_URI
+from qualysclient._defaults import AUTH_URI
 
 
 from qualysclient._util import _api_request
