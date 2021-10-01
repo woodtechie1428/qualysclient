@@ -40,6 +40,7 @@ def _validate_parameters(api_action, **kwargs) -> bool:
     Returns:
         bool: True if all validation's pass without exceptions
     """
+    return True
     if api_action is None:
         raise ParameterValidationError("No api_action specified")
     if API_ACTIONS.get(api_action, None) is None:
@@ -109,7 +110,7 @@ def _perform_request(caller, api_url, input_params, http_method="POST") -> Respo
         except HTTPError as http_error:
             # handle non 200 status codes here
             http_error_code = http_error.response.status_code
-            logger.error("HTTP Error caught: %s", http_error_code)
+            logger.error("HTTP Error caught: %s", http_error.args[0])
             (
                 qualys_error_code,
                 qualys_error_code_description,
@@ -131,7 +132,12 @@ def _perform_request(caller, api_url, input_params, http_method="POST") -> Respo
             elif http_error_code == 400:
                 # bad request
                 # codes 1901, 1903, 1904, 1905, 1907 ,1908, 1922, 999
-                pass
+                log_error(
+                    http_error_code, qualys_error_code, qualys_error_code_description
+                )
+                raise ParameterValidationError(
+                    qualys_error_text=qualys_error_code_description
+                )
             elif http_error_code == 401:
                 # bad login/password
                 # codes 2000
@@ -141,7 +147,7 @@ def _perform_request(caller, api_url, input_params, http_method="POST") -> Respo
                     qualys_error_code,
                     qualys_error_code_description,
                 )
-                raise LoginError
+                raise LoginError from http_error
             elif http_error_code == 403:
                 # forbidden
                 # codes 2002,  2012
@@ -184,3 +190,12 @@ def extract_qualys_error_codes(api_response: Response) -> Tuple[int, str]:
     qualys_error_code_description = xml.find("./RESPONSE/TEXT").text
 
     return (qualys_error_code, qualys_error_code_description)
+
+
+def log_error(http_error_code, qualys_error_code, qualys_error_code_description):
+    logger.error(
+        "http_error_code: %s qualys_error_code: %s qualys_error_code_description: %s",
+        http_error_code,
+        qualys_error_code,
+        qualys_error_code_description,
+    )
