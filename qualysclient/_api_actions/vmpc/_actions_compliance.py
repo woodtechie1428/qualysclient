@@ -1,4 +1,4 @@
-_compliance_endpoints = [
+_compliance_actions = [
     [
         "compliance_control_list",
         "/api/2.0/fo/compliance/control/?action=list",

@@ -1,4 +1,4 @@
-_assets_endpoints = [
+_assets_actions = [
     [
         "list_ip",
         "/api/2.0/fo/asset/ip/?action=list",

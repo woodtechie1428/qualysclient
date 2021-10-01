@@ -1,4 +1,4 @@
-_session_endpoints = [
+_session_actions = [
     [
         "login",
         "/api/2.0/fo/session/?action=login",

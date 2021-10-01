@@ -1,4 +1,4 @@
-_reports_endpoints = [
+_reports_actions = [
     [
         "list_reports",
         "/api/2.0/fo/report/?action=list",
