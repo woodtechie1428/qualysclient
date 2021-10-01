@@ -1,13 +1,12 @@
 from .assets import Assets
 from .reports import Reports
 from .compliance import Compliance
-from ._auth_session import AuthSession
 
 from requests import Session
 from qualysclient._defaults import AUTH_URI
 
 
-class QualysClient(AuthSession):
+class QualysClient:
     """
     a simple client for interacting with the Qualys API
     """
@@ -15,17 +14,9 @@ class QualysClient(AuthSession):
     def __init__(self, username=None, password=None):
         self.username = username
         self.password = password
-        super(QualysClient, self).__init__(
-            username=self.username, password=self.password
-        )
-
-    def __init__(self, username=None, password=None):
-        self.username = username
-        self.password = password
         self.s = Session()
         self.s.headers.update({"X-Requested-With": "Qualys Client - Python"})
 
-        super(QualysClient, self).__init__(self.s)
         if username:
             self.login(username=username, password=password)
 
@@ -84,22 +75,22 @@ class QualysClient(AuthSession):
             )
 
     @property
-    def reports(self):
+    def reports(self) -> Reports:
         """
         The interface object for the :doc:`Reports API <qualysclient.reports.Reports>`
         """
-        return Reports(self)
+        return Reports(shared_session=self.s)
 
     @property
-    def compliance(self):
+    def compliance(self) -> Compliance:
         """
         The interface object for the :doc:`Compliance API <qualysclient.compliance.Compliance>`
         """
-        return Compliance(self)
+        return Compliance(shared_session=self.s)
 
     @property
-    def assets(self):
+    def assets(self) -> Assets:
         """
         The interface object for the :doc:`Assets API <qualysclient.assets.Assets>`
         """
-        return Assets(self)
+        return Assets(shared_session=self.s)

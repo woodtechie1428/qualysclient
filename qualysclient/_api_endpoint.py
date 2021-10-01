@@ -1,4 +1,4 @@
-from qualysclient._auth_session import AuthSession
+from requests import Session
 
 
 class APIEndpoint:
@@ -6,5 +6,5 @@ class APIEndpoint:
     Base class that other API specific classes are harnessed to.
     """
 
-    def __init__(self, authed_session: AuthSession):
-        self.s = authed_session.s
+    def __init__(self, shared_session: Session):
+        self.s = shared_session
