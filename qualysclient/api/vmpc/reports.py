@@ -1,9 +1,6 @@
 from requests import Response
 from qualysclient._util import _api_request
-
 from qualysclient._api_endpoint import APIEndpoint
-
-# from . import APIEndpoint
 
 
 class Reports(APIEndpoint):
