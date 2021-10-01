@@ -5,6 +5,15 @@ class QualysClientError(Exception):
 class ParameterValidationError(QualysClientError):
     """When Parameter validation fails"""
 
+    def __init__(
+        self,
+        msg="Qualys API parameter validation failed",
+        qualys_error_text: str = None,
+    ):
+        self.qualys_error_text = qualys_error_text
+        self.message = msg
+        super().__init__(self.message)
+
 
 class RequiredParameterMissingError(ParameterValidationError):
     """When Required Parameters are missing based on provided api_aciton"""
