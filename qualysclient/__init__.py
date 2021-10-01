@@ -1,15 +1,10 @@
-from requests import Response, Session
-
-from qualysclient._defaults import AUTH_URI
-
-
-from qualysclient._util import _api_request
-from .assets import *
-from .reports import *
-from .compliance import *
+from .assets import Assets
+from .reports import Reports
+from .compliance import Compliance
+from ._auth_session import AuthSession
 
 
-class QualysClient:
+class QualysClient(AuthSession):
     """
     a simple client for interacting with the Qualys API
     """
@@ -17,11 +12,9 @@ class QualysClient:
     def __init__(self, username=None, password=None):
         self.username = username
         self.password = password
-        self.s = Session()
-        self.s.headers.update({"X-Requested-With": "Qualys Client - Python"})
-
-        if username:
-            self.login(username=username, password=password)
+        super(QualysClient, self).__init__(
+            username=self.username, password=self.password
+        )
 
     def __enter__(self, username=None, password=None):
         return self
@@ -34,50 +27,23 @@ class QualysClient:
         self.logout()
         del self
 
-    def login(self, username, password):
+    @property
+    def reports(self):
         """
-        Authenticate to Qualys API
-
-        :param username: Qualys Username
-        :type username: str
-        :param password: Qualys Password
-        :type password: str
+        The interface object for the :doc:`Reports API <qualysclient.reports.Reports>`
         """
-        if isinstance(username, str) is False or isinstance(password, str) is False:
-            raise Exception("username and password is required and must be of type str")
+        return Reports(self)
 
-        payload = {"action": "login", "username": username, "password": password}
-        r = self.s.post(AUTH_URI, payload)
-        if r.status_code != 200:
-            print(
-                "Status:",
-                r.status_code,
-                "Headers:",
-                r.headers,
-                "Error Response:",
-                r.content,
-            )
-
-        return self
-
-    def logout(self):
+    @property
+    def compliance(self):
         """
-        Log out of authenticated sessionn
+        The interface object for the :doc:`Compliance API <qualysclient.compliance.Compliance>`
         """
-        payload = {"action": "logout"}
-        r = self.s.post(AUTH_URI, data=payload)
-        if r.status_code != 200:
-            print(
-                "\nStatus:",
-                r.status_code,
-                "\nHeaders:",
-                r.headers,
-                "\nError Response:",
-                r.content,
-            )
+        return Compliance(self)
 
-    # REPORTS
-
-    # ASSET
-
-    # COMPLIANCE
+    @property
+    def assets(self):
+        """
+        The interface object for the :doc:`Assets API <qualysclient.assets.Assets>`
+        """
+        return Assets(self)

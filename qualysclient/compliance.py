@@ -1,9 +1,10 @@
 from requests import Response
 from qualysclient._util import _api_request
 from io import FileIO
+from qualysclient._api_endpoint import APIEndpoint
 
 
-class Compliance:
+class Compliance(APIEndpoint):
     """Methods for interacting with the Compliance endpoint"""
 
     def compliance_control_list(self, **kwargs) -> Response:

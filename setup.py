@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-exec(open("qualysclient/version.py").read())
+exec(open("qualysclient/_version.py").read())
 
 setup(
     name="qualysclient",

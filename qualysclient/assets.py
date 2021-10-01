@@ -1,8 +1,9 @@
 from requests import Response
 from qualysclient._util import _api_request
+from qualysclient._api_endpoint import APIEndpoint
 
 
-class Assets:
+class Assets(APIEndpoint):
     """methods for interacting with the Assets endpoint"""
 
     def list_ip(self, **kwargs) -> Response:

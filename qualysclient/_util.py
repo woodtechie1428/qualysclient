@@ -13,7 +13,7 @@ from requests import Response
 from lxml import etree
 
 from qualysclient._endpoints import api_actions as API_ACTIONS
-from qualysclient.models import APIAction
+from qualysclient._models import APIAction
 from qualysclient._defaults import BASE_URI, REQUEST_TIMEOUT, MAX_RETRIES
 from qualysclient.exceptions import (
     RequiredParameterMissingError,
