@@ -1,6 +1,6 @@
 from requests import Session
 from qualysclient._defaults import AUTH_URI
-from qualysclient.api_endpoints import Assets, Reports, Compliance
+from qualysclient.api import VMPCApi
 
 
 class QualysClient:
@@ -73,22 +73,8 @@ class QualysClient:
         print("logged out")
 
     @property
-    def reports(self) -> Reports:
+    def vmpc(self) -> VMPCApi:
         """
-        The interface object for the :doc:`Reports API <qualysclient.api_endpoints.reports.Reports>`
+        The interface object for the :doc:`VM & PC API <qualysclient.api.VMPCApi>`
         """
-        return Reports(shared_session=self.s)
-
-    @property
-    def compliance(self) -> Compliance:
-        """
-        The interface object for the :doc:`Compliance API <qualysclient.api_endpoints.compliance.Compliance>`
-        """
-        return Compliance(shared_session=self.s)
-
-    @property
-    def assets(self) -> Assets:
-        """
-        The interface object for the :doc:`Assets API <qualysclient.api_endpoints.assets.Assets>`
-        """
-        return Assets(shared_session=self.s)
+        return VMPCApi(shared_session=self.s)
