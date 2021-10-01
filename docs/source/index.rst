@@ -34,8 +34,18 @@ Usage Examples
    from qualysclient import QualysClient
 
    qc = QualysClient(username = "your_username", password = "your_password")
-   api_resp = qc.list_reports()
+   api_resp = qc.reports.list_reports()
+   print (api_resp.text)
    qc.logout()
+
+.. code-block:: python
+
+   from qualysclient import QualysClient
+
+   with QualysClient(username = "your_username", password = "your_password") as qc:
+      api_resp = qc.reports.list_reports()
+      print (api_resp.text)
+
 
 API Reference
 ---------------
