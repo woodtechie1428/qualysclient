@@ -1,7 +1,10 @@
 from requests import Response
 from qualysclient._util import _api_request
 from io import FileIO
+
 from qualysclient._api_endpoint import APIEndpoint
+
+# from . import APIEndpoint
 
 
 class Compliance(APIEndpoint):

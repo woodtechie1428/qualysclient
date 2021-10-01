@@ -1,9 +1,6 @@
-from .assets import Assets
-from .reports import Reports
-from .compliance import Compliance
-
 from requests import Session
 from qualysclient._defaults import AUTH_URI
+from qualysclient.api_endpoints import Assets, Reports, Compliance
 
 
 class QualysClient:
@@ -73,24 +70,25 @@ class QualysClient:
                 "\nError Response:",
                 r.content,
             )
+        print("logged out")
 
     @property
     def reports(self) -> Reports:
         """
-        The interface object for the :doc:`Reports API <qualysclient.reports.Reports>`
+        The interface object for the :doc:`Reports API <qualysclient.api_endpoints.reports.Reports>`
         """
         return Reports(shared_session=self.s)
 
     @property
     def compliance(self) -> Compliance:
         """
-        The interface object for the :doc:`Compliance API <qualysclient.compliance.Compliance>`
+        The interface object for the :doc:`Compliance API <qualysclient.api_endpoints.compliance.Compliance>`
         """
         return Compliance(shared_session=self.s)
 
     @property
     def assets(self) -> Assets:
         """
-        The interface object for the :doc:`Assets API <qualysclient.assets.Assets>`
+        The interface object for the :doc:`Assets API <qualysclient.api_endpoints.assets.Assets>`
         """
         return Assets(shared_session=self.s)
