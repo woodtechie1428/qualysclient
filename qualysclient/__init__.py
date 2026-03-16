@@ -1,4 +1,6 @@
 from io import FileIO
+from lxml import etree
+from urllib import parse
 from requests import Response, Session
 
 from qualysclient._defaults import AUTH_URI
@@ -519,3 +521,32 @@ class QualysClient:
         """
         api_action = "compliance_exception_delete"
         return _api_request(self, api_action, **kwargs)
+
+    def get_paginator(self, operation_name: str, **kwargs):
+        """Generator function that yields Qualys paginated data.
+
+        Args:
+            operation_name (str): api action - specified name of endpoint. For example `host_list`
+            **kwargs: supported keywords documented within the `Qualys VM/PC API user guide <https://www.qualys.com/docs/qualys-api-vmpc-user-guide.pdf>`_
+        Yields:
+            :class:`~requests.Response`: Qualys API response contained within request.Response object
+        """
+        params = kwargs
+
+        while True:
+            response = _api_request(self, operation_name, **params)
+            yield response
+
+            xml = etree.fromstring(response.content)
+            url = xml.find("./RESPONSE/WARNING/URL")
+
+            if url is not None:
+                id_min = dict(parse.parse_qsl(parse.urlparse(url.text).query)).get("id_min")
+
+                if id_min:
+                    params["id_min"] = id_min
+                else:
+                    break
+
+            else:
+                break
